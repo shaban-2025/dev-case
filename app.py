@@ -72,16 +72,6 @@ except TopicAlreadyExistsError:
 finally:
     admin_client.close()
 
-consumer = KafkaConsumer(
-        KAFKA_TOPIC,
-        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
-        auto_offset_reset='latest',
-        enable_auto_commit=True,
-        # group_id=f'flask-consumer-{uuid.uuid4()}',
-        group_id='devops-consumer-group',
-        value_deserializer=lambda m: json.loads(m.decode('utf-8'))
-    )
-
 # === MongoDB Client ===
 mongo_client = MongoClient(MONGO_URI)
 mongo_collection = mongo_client[MONGO_DB_NAME][MONGO_COLLECTION]
@@ -93,6 +83,15 @@ def delayed_consume_and_store(msg_id):
 
     time.sleep(10)
 
+    consumer = KafkaConsumer(
+        KAFKA_TOPIC,
+        bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+        auto_offset_reset='earliest',
+        enable_auto_commit=True,
+        group_id=f'devops-consumer-group-{uuid.uuid4()}',  # Unique group ID
+        value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+    )
+
     for message in consumer:
         logging.info(f"message: {message}")
         value = message.value
@@ -103,6 +102,8 @@ def delayed_consume_and_store(msg_id):
                 "timestamp": time.time()
             })
             break
+
+    consumer.close()
 
 # === API Endpoint ===
 @app.route('/devops-api', methods=['GET', 'POST'])
