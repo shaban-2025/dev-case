@@ -43,9 +43,9 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-logging.getLogger("kafka").setLevel(logging.WARNING)
-logging.getLogger("urllib3").setLevel(logging.WARNING)
-logging.getLogger("kafka.conn").setLevel(logging.ERROR)
+# logging.getLogger("kafka").setLevel(logging.WARNING)
+# logging.getLogger("urllib3").setLevel(logging.WARNING)
+# logging.getLogger("kafka.conn").setLevel(logging.ERROR)
 
 # === Kafka Producer ===
 producer = KafkaProducer(
@@ -87,8 +87,9 @@ def delayed_consume_and_store(msg_id):
         KAFKA_TOPIC,
         bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
         auto_offset_reset='earliest',
-        enable_auto_commit=False,
-        group_id=f'flask-consumer-{uuid.uuid4()}',
+        enable_auto_commit=True,
+        # group_id=f'flask-consumer-{uuid.uuid4()}',
+        group_id='devops-consumer-group',
         value_deserializer=lambda m: json.loads(m.decode('utf-8'))
     )
 
