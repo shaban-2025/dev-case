@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/shaban-2025/dev-case
-  tag: 65da95a
+  tag: b6f75cb
   pullPolicy: Always
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -45,7 +45,7 @@ kafka:
 
   advertisedListeners:
     client:
-      host: devops-case-kafka
+      host: devops-case-kafka.saban.svc.cluster.local
       port: 9092
 
   auth:
