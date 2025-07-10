@@ -7,6 +7,8 @@ import json
 import uuid
 import os
 import logging
+from kafka.admin import KafkaAdminClient, NewTopic
+from kafka.errors import TopicAlreadyExistsError
 
 app = Flask(__name__)
 
@@ -50,6 +52,25 @@ producer = KafkaProducer(
     bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
+
+admin_client = KafkaAdminClient(
+    bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
+    client_id='devops-topic-creator'
+)
+
+topic = NewTopic(
+    name=KAFKA_TOPIC,
+    num_partitions=1,
+    replication_factor=1
+)
+
+try:
+    admin_client.create_topics([topic])
+    logging.info(f"Topic '{KAFKA_TOPIC}' created successfully.")
+except TopicAlreadyExistsError:
+    logging.error(f"Topic '{KAFKA_TOPIC}' already exists.")
+finally:
+    admin_client.close()
 
 # === MongoDB Client ===
 mongo_client = MongoClient(MONGO_URI)

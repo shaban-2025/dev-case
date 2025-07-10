@@ -7,11 +7,18 @@ spec:
   selector:
     matchLabels:
       app: {{ include "devops-case.name" . }}
+      app.kubernetes.io/name: {{ include "devops-case.name" . }}
   template:
     metadata:
       labels:
         app: {{ include "devops-case.name" . }}
+        app.kubernetes.io/name: {{ include "devops-case.name" . }}
     spec:
+      initContainers:
+        - name: wait-for-kafka
+          image: busybox
+          command: [ 'sh', '-c', 'until nc -z devops-case-kafka 9092; do echo waiting for kafka; sleep 5; done' ]
+
       containers:
         - name: app
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -20,12 +27,49 @@ spec:
             - containerPort: 5000
           env:
             - name: KAFKA_TOPIC
-              value: "{{ .Values.env.kafkaTopic }}"
-            - name: KAFKA_BOOTSTRAP_SERVERS
-              value: "{{ .Release.Name }}-kafka:9092"
-            - name: MONGO_URI
-              value: "mongodb://devopsuser:devopspass@{{ .Release.Name }}-mongodb:27017/?authSource=admin"
-            - name: MONGO_DB
-              value: "devops-db"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "devops-case.fullname" . }}-config
+                  key: KAFKA_TOPIC
+
+            - name: KAFKA_SERVER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "devops-case.fullname" . }}-config
+                  key: KAFKA_SERVER
+
+            - name: MONGO_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "devops-case.fullname" . }}-config
+                  key: MONGO_HOST
+
+            - name: MONGO_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "devops-case.fullname" . }}-config
+                  key: MONGO_PORT
+
+            - name: MONGO_DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "devops-case.fullname" . }}-config
+                  key: MONGO_DB_NAME
+
             - name: MONGO_COLLECTION
-              value: "devops-values"
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "devops-case.fullname" . }}-config
+                  key: MONGO_COLLECTION
+
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: devops-case-secret
+                  key: MONGO_USERNAME
+
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: devops-case-secret
+                  key: MONGO_PASSWORD
