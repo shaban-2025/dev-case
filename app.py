@@ -88,8 +88,8 @@ def delayed_consume_and_store(msg_id):
         bootstrap_servers=KAFKA_BOOTSTRAP_SERVERS,
         auto_offset_reset='earliest',
         enable_auto_commit=True,
-        group_id=f'flask-consumer-{uuid.uuid4()}',
-        # group_id='devops-consumer-group',
+        # group_id=f'flask-consumer-{uuid.uuid4()}',
+        group_id='devops-consumer-group',
         value_deserializer=lambda m: json.loads(m.decode('utf-8'))
     )
 

@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/shaban-2025/dev-case
-  tag: b6f75cb
+  tag: 2bab81d
   pullPolicy: Always
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
