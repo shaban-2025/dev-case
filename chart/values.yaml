@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/shaban-2025/dev-case
-  tag: 24a8c31
+  tag: f31a5b3
   pullPolicy: Always
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
@@ -31,28 +31,19 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-env:
-  kafkaTopic: devops-topic
-
 # kafka chart'ı için ayarlar
 kafka:
-  controller:
+  replicaCount: 1
+  zookeeper:
+    enabled: true
     replicaCount: 1
-
-  listeners:
-    client:
-      protocol: PLAINTEXT
-
-  advertisedListeners:
-    client:
-      host: devops-case-kafka.saban.svc.cluster.local
-      port: 9092
-
   auth:
     enabled: false
-
-  autoCreateTopicsEnable: false
-
+  autoCreateTopicsEnable: true
+  defaultReplicationFactor: 1
+  offsetsTopicReplicationFactor: 1
+  transactionStateLogReplicationFactor: 1
+  transactionStateLogMinIsr: 1
 
 # mongodb chart'ı için ayarlar
 mongodb:

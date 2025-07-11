@@ -25,10 +25,9 @@ appVersion: "1.0"
 
 
 dependencies:
-  - name: kafka
-    version: 32.2.8
-    repository: https://charts.bitnami.com/bitnami
-
-  - name: mongodb
-    version: 16.5.11
-    repository: https://charts.bitnami.com/bitnami
+- name: kafka
+  version: "19.1.5"
+  repository: https://charts.bitnami.com/bitnami
+- name: mongodb
+  version: "13.15.1"
+  repository: https://charts.bitnami.com/bitnami
