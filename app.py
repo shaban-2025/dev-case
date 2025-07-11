@@ -43,9 +43,9 @@ logging.basicConfig(
     datefmt='%Y-%m-%d %H:%M:%S'
 )
 
-# logging.getLogger("kafka").setLevel(logging.WARNING)
-# logging.getLogger("urllib3").setLevel(logging.WARNING)
-# logging.getLogger("kafka.conn").setLevel(logging.ERROR)
+logging.getLogger("kafka").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
+logging.getLogger("kafka.conn").setLevel(logging.ERROR)
 
 # === Kafka Producer ===
 producer = KafkaProducer(
