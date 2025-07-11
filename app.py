@@ -34,7 +34,7 @@ MONGO_USERNAME = os.getenv('MONGO_USERNAME', 'mongouser')
 MONGO_PASSWORD = os.getenv('MONGO_PASSWORD', 'mongopass')
 MONGO_DB_NAME = os.getenv('MONGO_DB_NAME', 'devops-db')
 MONGO_COLLECTION = os.getenv('MONGO_COLLECTION', 'devops-values')
-MONGO_URI = 'mongodb://'+ MONGO_USERNAME +':'+ MONGO_PASSWORD + '@'+ MONGO_HOST +':'+ MONGO_PORT +'/'
+MONGO_URI = 'mongodb://'+ MONGO_USERNAME +':'+ MONGO_PASSWORD + '@'+ MONGO_HOST +':'+ MONGO_PORT +'/?authSource=admin'
 
 # === Logging adjustments ===
 logging.basicConfig(
